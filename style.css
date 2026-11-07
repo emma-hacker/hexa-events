@@ -496,18 +496,8 @@ footer {
     background-color: #808000;
     color: #fff6cc;
     text-align: center;
-    padding: 20px 15px;
+    padding: 20px;
     margin-top: 40px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-footer p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-    word-wrap: break-word; /* Hace que el texto largo baje a la siguiente línea */
-    padding: 0 10px; /* Un respiro extra a los lados */
 }
 
 /* =========================================================
@@ -1244,26 +1234,15 @@ footer p {
 }
 .btn-agregar-paquete:hover { background-color: #128C7E; }
 
-header .logo img {
-    width: 120px;
-    height: auto;
-    max-width: 100%;
-    display: block;
-    background-color: transparent;
-}
-
-@media (max-width: 768px) {
-    .btn-carrito, .burbuja-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-    .btn-carrito {
-        bottom: 85px; /* Lo subimos un poco para que no choque con el de abajo */
-        right: 20px;
-    }
-    .burbuja-contenedor {
-        bottom: 20px;
-        right: 20px;
-    }
+/* =========================================================
+   OCULTAR EL BOTÓN DE NETLIFY
+   ========================================================= */
+/* Este código busca el iframe o el div que inyecta Netlify y lo oculta */
+iframe[src*="netlify"], 
+div[data-netlify-badge], 
+#netlify-badge {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
