@@ -929,41 +929,9 @@
 
         <!-- ===== SCRIPT DEL FORMULARIO ===== -->
     <script>
-        const form = document.getElementById('formulario-contacto');
-        const mensajeExito = document.getElementById('mensaje-exito');
-        const btnEnviar = document.getElementById('btn-enviar');
-
-        form.addEventListener('submit', function(e) {
-            // ❌ QUITAMOS la línea: e.preventDefault(); 
-            // Dejamos que el formulario se envíe a Netlify de forma natural.
-
-            const btnEnviar = document.getElementById('btn-enviar');
-            if(btnEnviar) {
-                btnEnviar.innerHTML = 'Enviando...';
-                btnEnviar.disabled = true;
-            }
-        });
-
-            .then(response => {
-                if (response.ok) {
-                    // Si todo sale bien:
-                    form.style.display = 'none';       // Ocultamos el formulario
-                    mensajeExito.classList.add('visible'); // Mostramos el mensaje
-                    form.reset();                      // Limpiamos los campos
-                } else {
-                    alert('Hubo un error al enviar. Intenta de nuevo.');
-                    btnEnviar.innerHTML = textoOriginal;
-                    btnEnviar.disabled = false;
-                }
-            })
-            .catch(error => {
-                alert('Error de conexión. Revisa tu internet.');
-                btnEnviar.innerHTML = textoOriginal;
-                btnEnviar.disabled = false;
-            });
-        });
+        <form id="formulario-contacto" name="contacto" method="POST" netlify action="/?enviado=true#contacto">
     </script>
-
+    
     <script>
                 // Función para seleccionar proveedores
         function seleccionarProveedor(boton) {
@@ -1450,6 +1418,24 @@
         
         // 3. Lo dejamos revisando cada 1 segundo por si acaso
         setInterval(destruirBadgeNetlify, 1000);
+    </script>
+    
+    <script>
+        // ===== MOSTRAR MENSAJE DE ÉXITO SI VIENE DE NETLIFY =====
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('enviado') === 'true') {
+                // 1. Ocultamos el formulario
+                document.getElementById('formulario-contacto').style.display = 'none';
+                // 2. Mostramos la ventanita verde
+                document.getElementById('mensaje-exito').classList.add('visible');
+                // 3. Hacemos scroll hasta la sección de contacto
+                document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+                
+                // Limpiamos la URL para que no se quede el "?enviado=true"
+                window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
+            }
+        });
     </script>
 
         <!-- ===== MODAL DE DESGLOSE DE PAQUETES ===== -->
