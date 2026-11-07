@@ -1233,16 +1233,3 @@ footer {
     cursor: pointer; transition: 0.3s; font-family: inherit;
 }
 .btn-agregar-paquete:hover { background-color: #128C7E; }
-
-/* =========================================================
-   OCULTAR EL BOTÓN DE NETLIFY
-   ========================================================= */
-/* Este código busca el iframe o el div que inyecta Netlify y lo oculta */
-iframe[src*="netlify"], 
-div[data-netlify-badge], 
-#netlify-badge {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}

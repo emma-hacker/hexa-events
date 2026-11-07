@@ -1426,28 +1426,27 @@
         }
     </script>
 
-        <!-- Script definitivo para eliminar el botón de Netlify -->
+    <!-- Script definitivo: Ocultar el botón de Netlify sin destruirlo -->
     <script>
-        // Esta función busca el iframe de Netlify y lo destruye
-        function eliminarBotonNetlify() {
-            // Busca cualquier iframe que contenga "netlify" en su origen
+        function ocultarBotonNetlify() {
             const iframes = document.querySelectorAll('iframe');
             iframes.forEach(iframe => {
+                // Si el iframe es de Netlify, lo forzamos a ocultarse con CSS
                 if (iframe.src && iframe.src.includes('netlify')) {
-                    iframe.remove(); // Lo borra de la faz de la tierra
+                    iframe.style.setProperty('display', 'none', 'important');
+                    iframe.style.setProperty('visibility', 'hidden', 'important');
+                    iframe.style.setProperty('opacity', '0', 'important');
+                    iframe.style.setProperty('pointer-events', 'none', 'important');
+                    iframe.style.setProperty('z-index', '-9999', 'important');
                 }
             });
-
-            // Por si las dudas, busca también la etiqueta que lo contiene
-            const badge = document.getElementById('netlify-badge') || document.querySelector('div[data-netlify-badge]');
-            if (badge) badge.remove();
         }
 
-        // Ejecutamos la función cuando la página cargue y luego cada segundo por si Netlify lo vuelve a inyectar
-        window.addEventListener('load', eliminarBotonNetlify);
-        setInterval(eliminarBotonNetlify, 1000);
+        // Lo ejecutamos al cargar y cada 500 milisegundos por si acaso
+        window.addEventListener('load', ocultarBotonNetlify);
+        setInterval(ocultarBotonNetlify, 500);
     </script>
-
+    
         <!-- ===== MODAL DE DESGLOSE DE PAQUETES ===== -->
     <div id="modal-paquete" class="modal-fondo">
         <div class="modal-contenido modal-paquete-ancho">
