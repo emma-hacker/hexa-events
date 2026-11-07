@@ -934,24 +934,16 @@
         const btnEnviar = document.getElementById('btn-enviar');
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue
+            // ❌ QUITAMOS la línea: e.preventDefault(); 
+            // Dejamos que el formulario se envíe a Netlify de forma natural.
 
-            // Cambiamos el texto del botón mientras carga
-            const textoOriginal = btnEnviar.innerHTML;
-            btnEnviar.innerHTML = 'Enviando...';
-            btnEnviar.disabled = true;
+            const btnEnviar = document.getElementById('btn-enviar');
+            if(btnEnviar) {
+                btnEnviar.innerHTML = 'Enviando...';
+                btnEnviar.disabled = true;
+            }
+        });
 
-            // Recopilamos los datos del formulario
-            const formData = new FormData(form);
-
-            // Enviamos los datos en segundo plano
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
             .then(response => {
                 if (response.ok) {
                     // Si todo sale bien:
