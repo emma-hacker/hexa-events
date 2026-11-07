@@ -1426,27 +1426,40 @@
         }
     </script>
 
-    <!-- Script definitivo: Ocultar el botón de Netlify sin destruirlo -->
+        <!-- Script DEFINITIVO para eliminar el botón de Netlify -->
     <script>
-        function ocultarBotonNetlify() {
-            const iframes = document.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                // Si el iframe es de Netlify, lo forzamos a ocultarse con CSS
-                if (iframe.src && iframe.src.includes('netlify')) {
-                    iframe.style.setProperty('display', 'none', 'important');
-                    iframe.style.setProperty('visibility', 'hidden', 'important');
-                    iframe.style.setProperty('opacity', '0', 'important');
-                    iframe.style.setProperty('pointer-events', 'none', 'important');
-                    iframe.style.setProperty('z-index', '-9999', 'important');
-                }
-            });
+        // Esta función ataca directamente al ID del iframe
+        function destruirBadgeNetlify() {
+            const badgeFrame = document.getElementById('nl-badge-frame');
+            
+            if (badgeFrame) {
+                // Le inyectamos CSS en línea con prioridad máxima para que desaparezca
+                badgeFrame.style.setProperty('display', 'none', 'important');
+                badgeFrame.style.setProperty('visibility', 'hidden', 'important');
+                badgeFrame.style.setProperty('opacity', '0', 'important');
+                badgeFrame.style.setProperty('width', '0', 'important');
+                badgeFrame.style.setProperty('height', '0', 'important');
+                badgeFrame.style.setProperty('z-index', '-9999', 'important');
+                // Y por si acaso, lo intentamos borrar del HTML
+                badgeFrame.remove();
+            }
         }
 
-        // Lo ejecutamos al cargar y cada 500 milisegundos por si acaso
-        window.addEventListener('load', ocultarBotonNetlify);
-        setInterval(ocultarBotonNetlify, 500);
+        // 1. Lo intentamos apenas cargue la página
+        window.addEventListener('load', destruirBadgeNetlify);
+        
+        // 2. Lo intentamos en un bucle rápido durante los primeros 3 segundos (por si Netlify lo inyecta tarde)
+        let intentos = 0;
+        const intervaloRapido = setInterval(() => {
+            destruirBadgeNetlify();
+            intentos++;
+            if (intentos > 30) clearInterval(intervaloRapido); // Se detiene después de 3 segundos
+        }, 100);
+        
+        // 3. Lo dejamos revisando cada 1 segundo por si acaso
+        setInterval(destruirBadgeNetlify, 1000);
     </script>
-    
+
         <!-- ===== MODAL DE DESGLOSE DE PAQUETES ===== -->
     <div id="modal-paquete" class="modal-fondo">
         <div class="modal-contenido modal-paquete-ancho">

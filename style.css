@@ -1233,3 +1233,7 @@ footer {
     cursor: pointer; transition: 0.3s; font-family: inherit;
 }
 .btn-agregar-paquete:hover { background-color: #128C7E; }
+
+#nl-badge-frame {
+    display: none !important;
+}
