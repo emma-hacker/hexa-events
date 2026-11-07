@@ -1421,19 +1421,26 @@
         setInterval(destruirBadgeNetlify, 1000);
     </script>
     
+    <!-- ===== SCRIPT PARA MOSTRAR EL MENSAJE VERDE Y NO IR AL INICIO ===== -->
     <script>
-        // ===== MOSTRAR MENSAJE DE ÉXITO SI VIENE DE NETLIFY =====
         window.addEventListener('DOMContentLoaded', () => {
+            // Revisamos si la URL dice "enviado=true"
             const urlParams = new URLSearchParams(window.location.search);
+            
             if (urlParams.get('enviado') === 'true') {
                 // 1. Ocultamos el formulario
                 document.getElementById('formulario-contacto').style.display = 'none';
+                
                 // 2. Mostramos la ventanita verde
                 document.getElementById('mensaje-exito').classList.add('visible');
-                // 3. Hacemos scroll hasta la sección de contacto
-                document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
                 
-                // Limpiamos la URL para que no se quede el "?enviado=true"
+                // 3. Forzamos a que la página baje a la sección de contacto
+                // Usamos un pequeño retraso (setTimeout) para que el navegador termine de cargar
+                setTimeout(() => {
+                    document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+                
+                // 4. Limpiamos la URL para que no se quede el "?enviado=true" (opcional)
                 window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
             }
         });
