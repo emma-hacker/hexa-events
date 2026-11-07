@@ -1426,6 +1426,28 @@
         }
     </script>
 
+        <!-- Script definitivo para eliminar el botón de Netlify -->
+    <script>
+        // Esta función busca el iframe de Netlify y lo destruye
+        function eliminarBotonNetlify() {
+            // Busca cualquier iframe que contenga "netlify" en su origen
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if (iframe.src && iframe.src.includes('netlify')) {
+                    iframe.remove(); // Lo borra de la faz de la tierra
+                }
+            });
+
+            // Por si las dudas, busca también la etiqueta que lo contiene
+            const badge = document.getElementById('netlify-badge') || document.querySelector('div[data-netlify-badge]');
+            if (badge) badge.remove();
+        }
+
+        // Ejecutamos la función cuando la página cargue y luego cada segundo por si Netlify lo vuelve a inyectar
+        window.addEventListener('load', eliminarBotonNetlify);
+        setInterval(eliminarBotonNetlify, 1000);
+    </script>
+
         <!-- ===== MODAL DE DESGLOSE DE PAQUETES ===== -->
     <div id="modal-paquete" class="modal-fondo">
         <div class="modal-contenido modal-paquete-ancho">
