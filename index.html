@@ -1420,7 +1420,7 @@
     
     <!-- ===== SCRIPT PARA MOSTRAR EL MENSAJE VERDE Y MANTENER EL SCROLL ===== -->
     <script>
-        // 1. Al darle clic a "Enviar", guardamos una "bandera" en la memoria del navegador
+        // 1. Al darle clic a "Enviar", guardamos una "bandera" en la memoria
         const formContacto = document.getElementById('formulario-contacto');
         if (formContacto) {
             formContacto.addEventListener('submit', () => {
@@ -1428,31 +1428,35 @@
             });
         }
 
-        // 2. Cuando la página carga (incluso si se recargó por Netlify)
+        // 2. Cuando la página carga
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             
-            // Revisamos si venimos de un envío (por la URL o por la memoria)
             if (urlParams.get('enviado') === 'true' || sessionStorage.getItem('acabaDeEnviar') === 'true') {
                 
-                // Mostramos el mensaje
+                // A. Ocultamos el formulario y mostramos el mensaje verde
                 if (document.getElementById('formulario-contacto')) {
                     document.getElementById('formulario-contacto').style.display = 'none';
                     document.getElementById('mensaje-exito').classList.add('visible');
                 }
 
-                // Hacemos la magia: Le decimos al navegador que baje a contacto de inmediato
-                // Le ponemos unos milisegundos de retraso para que alcance a dibujar la sección
+                // B. ¡LA SOLUCIÓN! Obligamos a la página a activar la sección de contacto
+                // Ocultamos todas las secciones
+                document.querySelectorAll('.seccion-pagina').forEach(s => s.classList.remove('activa'));
+                // Mostramos SOLO contacto
+                const seccionContacto = document.getElementById('contacto');
+                if (seccionContacto) {
+                    seccionContacto.classList.add('activa');
+                }
+
+                // C. Ahora que es visible, bajamos a ella
                 setTimeout(() => {
-                    const seccionContacto = document.getElementById('contacto');
                     if (seccionContacto) {
-                        // El 'auto' hace que baje de golpe sin hacer la animación de "deslizar"
-                        // Esto evita que el navegador se vea raro al recargar
                         seccionContacto.scrollIntoView({ behavior: 'auto', block: 'start' });
                     }
                 }, 50);
 
-                // Limpiamos la URL y la memoria para que si el usuario recarga manualmente, todo vuelva a la normalidad
+                // D. Limpiamos la memoria y la URL
                 window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
                 sessionStorage.removeItem('acabaDeEnviar');
             }
