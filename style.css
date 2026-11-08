@@ -449,6 +449,10 @@ nav ul li a:hover {
     background-color: #fffdf0;
 }
 
+#contacto form input[type="hidden"] {
+    display: none !important;
+}
+
 #contacto form button {
     margin-top: 10px;
     align-self: center;
