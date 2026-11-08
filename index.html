@@ -646,7 +646,7 @@
             <form id="formulario-contacto" name="contacto" method="POST" netlify action="/?enviado=true#contacto"> 
 
             <!--<form id="formulario-contacto" action="https://formsubmit.co/hexaevents26@gmail.com" method="POST">-->
-                <input type="hidde" name="form-name" value="contacto" />
+                <input type="hidden" name="form-name" value="contacto" />
                 
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="nombre" required>
@@ -1420,6 +1420,14 @@
     
     <!-- ===== SCRIPT PARA MOSTRAR EL MENSAJE VERDE Y NO IR AL INICIO ===== -->
     <script>
+        // Función que se encarga de bajar a la sección de contacto
+        function bajarAContacto() {
+            const seccionContacto = document.getElementById('contacto');
+            if (seccionContacto) {
+                seccionContacto.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             
@@ -1428,22 +1436,22 @@
                 document.getElementById('formulario-contacto').style.display = 'none';
                 document.getElementById('mensaje-exito').classList.add('visible');
                 
-                // 2. Hacemos el scroll INMEDIATAMENTE (sin el setTimeout)
-                document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+                // 2. Hacemos el scroll inmediatamente
+                bajarAContacto();
                 
-                // 3. Limpiamos la URL para que no se quede el "?enviado=true" (opcional)
+                // 3. Limpiamos la URL
                 window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
             }
         });
 
-        // Un truco extra: Si el navegador se empeña en subir al inicio, lo obligamos a bajar
-        // justo en el instante en que la página termina de cargar por completo.
+        // Un "seguro" por si el navegador se empeña en subir al inicio al recargar
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('enviado') === 'true') {
-                setTimeout(() => {
-                    document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
-                }, 50); // 50 milisegundos es imperceptible para el ojo humano
+            // Si la URL tenía el "enviado=true", forzamos la bajada
+            if (urlParams.get('enviado') === 'true' || window.location.hash === '#contacto') {
+                // Lo hacemos un par de veces con milisegundos de diferencia por si el celular es lento
+                setTimeout(bajarAContacto, 50);
+                setTimeout(bajarAContacto, 200); 
             }
         });
     </script>
