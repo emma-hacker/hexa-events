@@ -1418,40 +1418,43 @@
         setInterval(destruirBadgeNetlify, 1000);
     </script>
     
-    <!-- ===== SCRIPT PARA MOSTRAR EL MENSAJE VERDE Y NO IR AL INICIO ===== -->
+    <!-- ===== SCRIPT PARA MOSTRAR EL MENSAJE VERDE Y MANTENER EL SCROLL ===== -->
     <script>
-        // Función que se encarga de bajar a la sección de contacto
-        function bajarAContacto() {
-            const seccionContacto = document.getElementById('contacto');
-            if (seccionContacto) {
-                seccionContacto.scrollIntoView({ behavior: 'smooth' });
-            }
+        // 1. Al darle clic a "Enviar", guardamos una "bandera" en la memoria del navegador
+        const formContacto = document.getElementById('formulario-contacto');
+        if (formContacto) {
+            formContacto.addEventListener('submit', () => {
+                sessionStorage.setItem('acabaDeEnviar', 'true');
+            });
         }
 
+        // 2. Cuando la página carga (incluso si se recargó por Netlify)
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             
-            if (urlParams.get('enviado') === 'true') {
-                // 1. Ocultamos el formulario y mostramos el mensaje
-                document.getElementById('formulario-contacto').style.display = 'none';
-                document.getElementById('mensaje-exito').classList.add('visible');
+            // Revisamos si venimos de un envío (por la URL o por la memoria)
+            if (urlParams.get('enviado') === 'true' || sessionStorage.getItem('acabaDeEnviar') === 'true') {
                 
-                // 2. Hacemos el scroll inmediatamente
-                bajarAContacto();
-                
-                // 3. Limpiamos la URL
-                window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
-            }
-        });
+                // Mostramos el mensaje
+                if (document.getElementById('formulario-contacto')) {
+                    document.getElementById('formulario-contacto').style.display = 'none';
+                    document.getElementById('mensaje-exito').classList.add('visible');
+                }
 
-        // Un "seguro" por si el navegador se empeña en subir al inicio al recargar
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            // Si la URL tenía el "enviado=true", forzamos la bajada
-            if (urlParams.get('enviado') === 'true' || window.location.hash === '#contacto') {
-                // Lo hacemos un par de veces con milisegundos de diferencia por si el celular es lento
-                setTimeout(bajarAContacto, 50);
-                setTimeout(bajarAContacto, 200); 
+                // Hacemos la magia: Le decimos al navegador que baje a contacto de inmediato
+                // Le ponemos unos milisegundos de retraso para que alcance a dibujar la sección
+                setTimeout(() => {
+                    const seccionContacto = document.getElementById('contacto');
+                    if (seccionContacto) {
+                        // El 'auto' hace que baje de golpe sin hacer la animación de "deslizar"
+                        // Esto evita que el navegador se vea raro al recargar
+                        seccionContacto.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    }
+                }, 50);
+
+                // Limpiamos la URL y la memoria para que si el usuario recarga manualmente, todo vuelva a la normalidad
+                window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
+                sessionStorage.removeItem('acabaDeEnviar');
             }
         });
     </script>
