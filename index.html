@@ -1164,7 +1164,7 @@
                 mensaje += `- ${item.nombre}${cant}: $${item.subtotal}%0A`;
             });
 
-            mensaje += `%0A*TOTAL ESTIMADO:* $${totalCotizado}%0A%0A¿Me pueden dar más información?`;
+            mensaje += `%0A*TOTAL ESTIMADO:* $${totalCotizado.toLocaleString('es-MX')}.00%0A%0A¿Me pueden dar más información?`;
 
             // Reemplaza el número por el tuyo con código de país (52 para México)
             const telefono = "524773720508"; 
