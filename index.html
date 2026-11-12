@@ -645,14 +645,13 @@
             
             <!--<form id="formulario-contacto" name="contacto" method="POST" netlify action="/?enviado=true#contacto"> -->
 
-            <form id="formulario-contacto" action="https://formspree.io/f/mqpqaldl" method="POST">
-                <input type="hidden" name="form-name" value="contacto" />
-                
+                        <form id="formulario-contacto" action="https://formspree.io/f/mqpqaldl" method="POST">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="nombre" required>
 
                 <label for="email">Correo electrónico</label>
-                <input type="email" id="email" name="email" required>
+                <!-- Formspree usa "_replyto" para  darle "Responder" directo al cliente -->
+                <input type="email" id="email" name="_replyto" required>
 
                 <label for="mensaje">Mensaje</label>
                 <textarea name="mensaje" id="mensaje" rows="4" required></textarea>
@@ -1418,52 +1417,49 @@
         setInterval(destruirBadgeNetlify, 1000);
     </script>
     
-    <!-- ===== SCRIPT PARA MOSTRAR EL MENSAJE VERDE Y MANTENER EL SCROLL ===== -->
+    <!-- ===== SCRIPT PARA FORMSPREE ===== -->
     <script>
-        // 1. Al darle clic a "Enviar", guardamos una "bandera" en la memoria
-        const formContacto = document.getElementById('formulario-contacto');
-        if (formContacto) {
-            formContacto.addEventListener('submit', () => {
-                sessionStorage.setItem('acabaDeEnviar', 'true');
+        const formularioContacto = document.getElementById('formulario-contacto');
+
+        if (formularioContacto) {
+            formularioContacto.addEventListener('submit', function(e) {
+                e.preventDefault(); // Evitamos que la página recargue
+
+                const btnEnviar = document.getElementById('btn-enviar');
+                btnEnviar.innerText = 'Enviando...';
+                btnEnviar.disabled = true;
+
+                const data = new FormData(formularioContacto);
+
+                fetch(formularioContacto.action, {
+                    method: formularioContacto.method,
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        // 1. Ocultamos el formulario y mostramos el mensaje verde
+                        formularioContacto.style.display = 'none';
+                        document.getElementById('mensaje-exito').classList.add('visible');
+                        
+                        // 2. Limpiamos los campos por si acaso
+                        formularioContacto.reset();
+                    } else {
+                        alert("Hubo un error al enviar. Intenta de nuevo.");
+                        btnEnviar.innerText = 'Enviar mensaje';
+                        btnEnviar.disabled = false;
+                    }
+                }).catch(error => {
+                    alert("Error de conexión. Revisa tu internet.");
+                    btnEnviar.innerText = 'Enviar mensaje';
+                    btnEnviar.disabled = false;
+                });
             });
         }
-
-        // 2. Cuando la página carga
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.get('enviado') === 'true' || sessionStorage.getItem('acabaDeEnviar') === 'true') {
-                
-                // A. Ocultamos el formulario y mostramos el mensaje verde
-                if (document.getElementById('formulario-contacto')) {
-                    document.getElementById('formulario-contacto').style.display = 'none';
-                    document.getElementById('mensaje-exito').classList.add('visible');
-                }
-
-                // B. ¡LA SOLUCIÓN! Obligamos a la página a activar la sección de contacto
-                // Ocultamos todas las secciones
-                document.querySelectorAll('.seccion-pagina').forEach(s => s.classList.remove('activa'));
-                // Mostramos SOLO contacto
-                const seccionContacto = document.getElementById('contacto');
-                if (seccionContacto) {
-                    seccionContacto.classList.add('activa');
-                }
-
-                // C. Ahora que es visible, bajamos a ella
-                setTimeout(() => {
-                    if (seccionContacto) {
-                        seccionContacto.scrollIntoView({ behavior: 'auto', block: 'start' });
-                    }
-                }, 50);
-
-                // D. Limpiamos la memoria y la URL
-                window.history.replaceState({}, document.title, window.location.pathname + "#contacto");
-                sessionStorage.removeItem('acabaDeEnviar');
-            }
-        });
     </script>
 
-        <!-- ===== MODAL DE DESGLOSE DE PAQUETES ===== -->
+    <!-- ===== MODAL DE DESGLOSE DE PAQUETES ===== -->
     <div id="modal-paquete" class="modal-fondo">
         <div class="modal-contenido modal-paquete-ancho">
             <div class="modal-paquete-header">
