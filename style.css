@@ -486,11 +486,45 @@ nav ul li a:hover {
 /* =========================================================
    SOBRE NOSOTROS
    ========================================================= */
-#sobre-nosotros p {
-    max-width: 700px;
+.tarjeta-sobre-nosotros {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border-top: 5px solid #808000; /* La misma línea verde de los paquetes */
+    max-width: 800px; /* Para que no se estire demasiado en computadora */
     margin: 0 auto;
-    text-align: center;
-    font-size: 17px;
+}
+
+.bloque-texto {
+    margin-bottom: 30px;
+}
+
+.bloque-texto:last-child {
+    margin-bottom: 0;
+}
+
+.bloque-texto strong {
+    color: #63630b;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.bloque-texto strong i {
+    color: #808000; /* Color verde para los iconitos */
+}
+
+.bloque-texto p {
+    font-size: 16px;
+    color: #444;
+    text-align: justify; /* Texto justificado para que se vea formal */
+    line-height: 1.6;
+    margin: 0;
 }
 
 /* =========================================================
